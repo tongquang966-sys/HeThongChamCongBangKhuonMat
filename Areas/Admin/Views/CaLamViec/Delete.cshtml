@@ -1,0 +1,21 @@
+@model WebApp.Models.CaLamViec
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Ngừng ca làm";
+}
+
+<div class="container mt-4">
+    <h3 class="fw-bold text-danger">⚠ Ngừng ca làm</h3>
+
+    <p>Bạn có chắc muốn ngừng ca <strong>@Model.TenCa</strong>?</p>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button class="btn btn-danger">Xác nhận</button>
+        <a asp-action="Index" class="btn btn-secondary">Huỷ</a>
+    </form>
+</div>
+x

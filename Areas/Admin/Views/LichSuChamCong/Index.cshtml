@@ -1,0 +1,335 @@
+@model IEnumerable<WebApp.ViewModels.BangChamCongVM>
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Lịch sử chấm công";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0 rounded-4 attendance-card">
+<style>
+    /* ===================== CARD ===================== */
+    .attendance-card {
+        background: #ffffff;
+    }
+
+    .rounded-4 {
+        border-radius: 1rem;
+    }
+
+    /* ===================== HEADER ===================== */
+    .filter-month {
+        border-radius: 10px;
+        font-size: 0.85rem;
+    }
+
+    .export-btn {
+        border-radius: 10px;
+        padding: 6px 14px;
+    }
+
+    /* ===================== TABLE ===================== */
+    .attendance-table {
+        font-size: 0.95rem;
+    }
+
+    .attendance-table thead th {
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+
+    .attendance-table tbody tr {
+        transition: background-color 0.25s ease, transform 0.2s ease;
+    }
+
+    .attendance-table tbody tr:hover {
+        background-color: rgba(13,110,253,0.05);
+    }
+
+    /* ===================== BADGES ===================== */
+    .date-badge {
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-weight: 500;
+    }
+
+    .shift-badge {
+        border-radius: 12px;
+        font-weight: 500;
+    }
+
+    .status-badge {
+        border-radius: 14px;
+        font-weight: 500;
+        min-width: 110px;
+        display: inline-block;
+    }
+
+    /* ===================== TIME ===================== */
+    .time-in {
+        letter-spacing: 0.5px;
+    }
+
+    .time-out {
+        letter-spacing: 0.5px;
+    }
+
+    /* ===================== SCROLL ===================== */
+    .table-responsive {
+        max-height: 460px;
+        overflow-y: auto;
+    }
+
+    .table-responsive::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background-color: rgba(100,116,139,0.35);
+        border-radius: 6px;
+    }
+
+    /* ===================== RESPONSIVE ===================== */
+    @@media (max-width: 768px) {
+        .attendance-table {
+            font-size: 0.85rem;
+        }
+
+        .status-badge {
+            min-width: auto;
+        }
+    }
+</style>
+        <!-- HEADER -->
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center rounded-top-4 flex-wrap gap-2">
+            <div>
+                <h5 class="mb-0 fw-bold">📅 Lịch sử chấm công</h5>
+                <small class="opacity-75">
+                    Theo dõi giờ vào – ra của nhân viên
+                </small>
+            </div>
+
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <!-- LỌC THEO THÁNG -->
+                <input type="month"
+                       class="form-control form-control-sm filter-month"
+                       title="Lọc theo tháng" />
+
+                <!-- NÚT XUẤT EXCEL -->
+                <a asp-action="ExportExcel"
+                   asp-controller="ChamCong"
+                   class="btn btn-success btn-sm fw-semibold export-btn">
+                    📥 Xuất Excel
+                </a>
+            </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 attendance-table">
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th class="text-start ps-4">👤 Nhân viên</th>
+                            <th>📆 Ngày</th>
+                            <th>⏰ Giờ vào</th>
+                            <th>⏰ Giờ ra</th>
+                            <th>🕘 Ca làm</th>
+                            <th>📌 Trạng thái</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <!-- NHÂN VIÊN -->
+                                    <td class="ps-4 fw-semibold text-start">
+                                        @item.HoTen
+                                    </td>
+
+                                    <!-- NGÀY -->
+                                    <td class="text-center">
+                                        <span class="badge bg-light text-dark border date-badge">
+                                            @item.NgayCong.ToString("dd/MM/yyyy")
+                                        </span>
+                                    </td>
+
+                                    <!-- GIỜ VÀO -->
+                                    <td class="text-center">
+                                        <span class="fw-semibold text-success time-in">
+                                            @item.GioVao.ToString(@"hh\:mm")
+                                        </span>
+                                    </td>
+
+                                    <!-- GIỜ RA -->
+                                    <td class="text-center">
+                                        @if (item.GioRa.HasValue)
+                                        {
+                                            <span class="fw-semibold text-danger time-out">
+                                                @item.GioRa.Value.ToString(@"hh\:mm")
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">--:--</span>
+                                        }
+                                    </td>
+
+                                    <!-- CA LÀM -->
+                                    <td class="text-center">
+                                        <span class="badge bg-info text-dark px-3 py-2 shift-badge">
+                                            @item.CaLam
+                                        </span>
+                                    </td>
+
+                                    <!-- TRẠNG THÁI -->
+                                    <td class="text-center">
+                                        @if (item.TrangThai == "Đủ công")
+                                        {
+                                            <span class="badge bg-success px-3 py-2 status-badge">
+                                                ✔ Đủ công
+                                            </span>
+                                        }
+                                        else if (item.TrangThai == "Về sớm")
+                                        {
+                                            <span class="badge bg-warning text-dark px-3 py-2 status-badge">
+                                                ⚠ Về sớm
+                                            </span>
+                                        }
+                                        else if (item.TrangThai == "Không đủ công")
+                                        {
+                                            <span class="badge bg-danger px-3 py-2 status-badge">
+                                                ✖ Không đủ công
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary px-3 py-2 status-badge">
+                                                @item.TrangThai
+                                            </span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    📭 Chưa có dữ liệu chấm công
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="card-footer text-muted small text-end">
+            Tổng số bản ghi:
+            <strong>@(Model?.Count() ?? 0)</strong>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* ===================== CARD ===================== */
+    .attendance-card {
+        background: #ffffff;
+    }
+
+    .rounded-4 {
+        border-radius: 1rem;
+    }
+
+    /* ===================== HEADER ===================== */
+    .filter-month {
+        border-radius: 10px;
+        font-size: 0.85rem;
+    }
+
+    .export-btn {
+        border-radius: 10px;
+        padding: 6px 14px;
+    }
+
+    /* ===================== TABLE ===================== */
+    .attendance-table {
+        font-size: 0.95rem;
+    }
+
+    .attendance-table thead th {
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+
+    .attendance-table tbody tr {
+        transition: background-color 0.25s ease, transform 0.2s ease;
+    }
+
+    .attendance-table tbody tr:hover {
+        background-color: rgba(13,110,253,0.05);
+    }
+
+    /* ===================== BADGES ===================== */
+    .date-badge {
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-weight: 500;
+    }
+
+    .shift-badge {
+        border-radius: 12px;
+        font-weight: 500;
+    }
+
+    .status-badge {
+        border-radius: 14px;
+        font-weight: 500;
+        min-width: 110px;
+        display: inline-block;
+    }
+
+    /* ===================== TIME ===================== */
+    .time-in {
+        letter-spacing: 0.5px;
+    }
+
+    .time-out {
+        letter-spacing: 0.5px;
+    }
+
+    /* ===================== SCROLL ===================== */
+    .table-responsive {
+        max-height: 460px;
+        overflow-y: auto;
+    }
+
+    .table-responsive::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background-color: rgba(100,116,139,0.35);
+        border-radius: 6px;
+    }
+
+    /* ===================== RESPONSIVE ===================== */
+    @@media (max-width: 768px) {
+        .attendance-table {
+            font-size: 0.85rem;
+        }
+
+        .status-badge {
+            min-width: auto;
+        }
+    }
+</style>

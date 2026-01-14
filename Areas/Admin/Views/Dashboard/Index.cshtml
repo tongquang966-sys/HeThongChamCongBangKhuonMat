@@ -1,0 +1,158 @@
+@model WebApp.ViewModels.DashboardVM
+@{
+    ViewData["Title"] = "Dashboard quản lý";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container mt-4">
+
+    <!-- ===== HEADER ===== -->
+    <div class="mb-4">
+        <h5 class="fw-bold mb-1">📊 Dashboard quản lý</h5>
+        <small class="text-muted">Tổng quan tình hình chấm công hệ thống</small>
+    </div>
+
+    <!-- ===== FILTER ===== -->
+    <form method="get" class="d-flex gap-2 mb-4 flex-wrap">
+        <select name="month" class="form-select form-select-sm w-auto">
+            @for (int i = 1; i <= 12; i++)
+            {
+                <option value="@i" selected="@(ViewBag.Month == i)">Tháng @i</option>
+            }
+        </select>
+
+        <select name="year" class="form-select form-select-sm w-auto">
+            @for (int y = DateTime.Now.Year - 2; y <= DateTime.Now.Year; y++)
+            {
+                <option value="@y" selected="@(ViewBag.Year == y)">Năm @y</option>
+            }
+        </select>
+
+        <button class="btn btn-primary btn-sm">🔍 Lọc</button>
+    </form>
+
+    <!-- ===== STATS ===== -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm card-hover border-0">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Tổng nhân viên</h6>
+                    <h3 class="fw-bold text-primary">@Model.TongNhanVien</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm card-hover border-0">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Đúng giờ</h6>
+                    <h3 class="fw-bold text-success">@Model.DungGio</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm card-hover border-0">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Đi trễ</h6>
+                    <h3 class="fw-bold text-danger">@Model.DiTre</h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== CHART ===== -->
+    <div class="card shadow-sm card-hover mb-4 border-0">
+        <div class="card-header bg-primary text-white fw-semibold">
+            📈 Lượt chấm công theo ngày
+        </div>
+        <div class="card-body">
+            <canvas id="barChart" height="120"></canvas>
+        </div>
+    </div>
+
+    <!-- ===== WARNING ===== -->
+    <div class="card shadow-sm card-hover mb-4 border-0">
+        <div class="card-header bg-warning fw-semibold">
+            ⚠ Nhân viên đi trễ nhiều
+        </div>
+        <div class="card-body">
+            <ul class="mb-0">
+                @foreach (var item in Model.CanhBaoDiTre)
+                {
+                    <li>@item</li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <!-- ===== TABLE ===== -->
+    <div class="card shadow-sm card-hover border-0">
+        <div class="card-header bg-info text-white fw-semibold">
+            ⏰ Nhân viên chưa chấm công hôm nay
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th>#</th>
+                            <th>Mã NV</th>
+                            <th>Họ tên</th>
+                            <th>Phòng ban</th>
+                            <th>Ca làm</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.ChuaChamCong.Count(); i++)
+                        {
+                            var nv = Model.ChuaChamCong[i];
+                            <tr>
+                                <td class="text-center">@(i + 1)</td>
+                                <td>@nv.MaNV</td>
+                                <td>@nv.HoTen</td>
+                                <td>@nv.PhongBan</td>
+                                <td>@nv.CaLam</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.NgayLabels)),
+            datasets: [{
+                data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.SoLuotChamCong)),
+                backgroundColor: 'rgba(13,110,253,0.75)'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+</script>
+
+<style>
+    .card-hover {
+        transition: all .25s ease;
+    }
+
+    .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 26px rgba(0,0,0,.15);
+    }
+</style>

@@ -1,0 +1,49 @@
+@model WebApp.ViewModels.NhanVienDetailsVM
+
+@{
+    ViewData["Title"] = "Chi tiết nhân viên";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+
+    <h4 class="fw-bold mb-3">👤 @Model.NhanVien.HoTen</h4>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <p><b>Email:</b> @Model.NhanVien.Email</p>
+            <p><b>Chức vụ:</b> @Model.NhanVien.ChucVu</p>
+        </div>
+    </div>
+
+    <h5 class="fw-bold mb-2">📅 Lịch sử chấm công</h5>
+
+    <table class="table table-bordered text-center">
+        <thead>
+            <tr>
+                <th>Ngày</th>
+                <th>Giờ vào</th>
+                <th>Giờ ra</th>
+                <th>Trạng thái</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.LichSuChamCong)
+        {
+            <tr>
+                <td>@item.Ngay.ToString("dd/MM/yyyy")</td>
+                <td>@item.GioVao</td>
+                <td>@item.GioRa</td>
+                <td>@item.TrangThai</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <a asp-area="Admin"
+       asp-controller="NhanVien"
+       asp-action="Index"
+       class="btn btn-secondary mt-3">
+        ↩ Quay lại
+    </a>
+</div>

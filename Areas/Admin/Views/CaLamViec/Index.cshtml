@@ -1,0 +1,57 @@
+@model IEnumerable<WebApp.Models.CaLamViec>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Quản lý ca làm";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between mb-3">
+        <h3 class="fw-bold">🕒 Quản lý ca làm</h3>
+        <a asp-action="Create" class="btn btn-primary">+ Thêm ca</a>
+    </div>
+
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Tên ca</th>
+                <th>Giờ bắt đầu</th>
+                <th>Giờ kết thúc</th>
+                <th>Số giờ công</th>
+                <th>Cho phép trễ</th>
+                <th>Cho phép về sớm</th>
+                <th>Trạng thái</th>
+                <th width="160">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.TenCa</td>
+                <td>@item.GioBatDau</td>
+                <td>@item.GioKetThuc</td>
+                <td>@item.SoGioCong</td>
+                <td>@item.ChoPhepTrePhut phút</td>
+                <td>@item.ChoPhepSomPhut phút</td>
+                <td>
+                    @if (item.IsActive)
+                    {
+                        <span class="badge bg-success">Đang dùng</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Ngừng</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Ngừng</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

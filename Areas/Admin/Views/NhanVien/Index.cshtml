@@ -1,0 +1,77 @@
+@model IEnumerable<WebApp.Models.NhanVien>
+
+@{
+    ViewData["Title"] = "Danh sách nhân viên";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="mb-0 fw-bold">👤 Danh sách nhân viên</h5>
+                <small>Quản lý thông tin nhân sự</small>
+            </div>
+
+            <a asp-area="Admin"
+               asp-controller="NhanVien"
+               asp-action="Create"
+               class="btn btn-light btn-sm fw-semibold">
+                ➕ Thêm nhân viên
+            </a>
+        </div>
+
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th>#</th>
+                        <th>Ảnh</th>
+                        <th>Họ tên</th>
+                        <th>Email</th>
+                        <th>SĐT</th>
+                        <th>Chức vụ</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                @foreach (var nv in Model)
+                {
+                    <tr>
+                        <td class="text-center">@nv.Id</td>
+                        <td class="text-center">
+                            @if (!string.IsNullOrEmpty(nv.AnhNhanVien))
+                            {
+                                <img src="@nv.AnhNhanVien"
+                                     width="48"
+                                     height="48"
+                                     class="rounded-circle"
+                                     style="object-fit:cover;" />
+                            }
+                        </td>
+                        <td>@nv.HoTen</td>
+                        <td>@nv.Email</td>
+                        <td>@nv.SoDienThoai</td>
+                        <td>@nv.ChucVu</td>
+                        <td class="text-center">
+                            <a asp-area="Admin" asp-controller="NhanVien" asp-action="Details" asp-route-id="@nv.Id"
+                               class="btn btn-sm btn-outline-secondary">👁</a>
+
+                            <a asp-area="Admin" asp-controller="NhanVien" asp-action="Edit" asp-route-id="@nv.Id"
+                               class="btn btn-sm btn-outline-primary">✏</a>
+
+                            <a asp-area="Admin" asp-controller="NhanVien" asp-action="GanCa" asp-route-id="@nv.Id"
+                               class="btn btn-sm btn-outline-warning">🕒</a>
+
+                            <a asp-area="Admin" asp-controller="NhanVien" asp-action="Delete" asp-route-id="@nv.Id"
+                               class="btn btn-sm btn-outline-danger">🗑</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

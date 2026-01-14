@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin | FaceAttend</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        body {
+            background: #f5f7fb;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #1e293b;
+            color: #fff;
+        }
+
+        .sidebar h3 {
+            text-align: center;
+            padding: 20px 0;
+            margin: 0;
+            border-bottom: 1px solid #334155;
+            font-weight: 700;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 20px;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .sidebar a:hover {
+            background: #334155;
+            color: #fff;
+        }
+
+        /* ===== MAIN ===== */
+        .main {
+            margin-left: 240px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            background: #fff;
+            padding: 12px 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .content {
+            padding: 25px;
+        }
+
+        /* ===== SEARCH ===== */
+        .search-box {
+            position: relative;
+            width: 320px;
+        }
+
+        #searchResult {
+            position: absolute;
+            top: 42px;
+            width: 100%;
+            z-index: 999;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== SIDEBAR ADMIN ===== -->
+    <div class="sidebar">
+        <h3>FaceAttend</h3>
+
+        <a asp-area="Admin"
+           asp-controller="Dashboard"
+           asp-action="Index">
+            📊 Dashboard
+        </a>
+
+        <a asp-area="Admin"
+           asp-controller="NhanVien"
+           asp-action="Index">
+            👤 Nhân viên
+        </a>
+
+        <!-- ✅ ĐÃ SỬA ĐÚNG Ở ĐÂY -->
+        <a asp-area="Admin"
+           asp-controller="LichSuChamCong"
+           asp-action="Index">
+            📅 Lịch sử chấm công
+        </a>
+    </div>
+
+    <!-- ===== MAIN ===== -->
+    <div class="main">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <b>@ViewData["Title"]</b>
+
+            <div class="search-box">
+                <input id="globalSearch"
+                       class="form-control form-control-sm"
+                       type="search"
+                       placeholder="Tìm nhân viên, chấm công, ca, ngày..."
+                       autocomplete="off"
+                       onkeyup="globalSearch()" />
+
+                <div id="searchResult" class="list-group"></div>
+            </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+            @RenderBody()
+        </div>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        async function globalSearch() {
+            let keyword = document.getElementById("globalSearch").value.trim();
+            let resultBox = document.getElementById("searchResult");
+
+            if (keyword.length < 1) {
+                resultBox.style.display = "none";
+                return;
+            }
+
+            let res = await fetch("/Search/Global?q=" + encodeURIComponent(keyword));
+            let data = await res.json();
+
+            resultBox.innerHTML = "";
+
+            if (data.length === 0) {
+                resultBox.style.display = "none";
+                return;
+            }
+
+            data.forEach(item => {
+                let a = document.createElement("a");
+                a.href = item.url;
+                a.className = "list-group-item list-group-item-action";
+                a.innerHTML = `
+                    <div class="fw-semibold">${item.label}</div>
+                    <small class="text-muted">${item.sub}</small>
+                `;
+                resultBox.appendChild(a);
+            });
+
+            resultBox.style.display = "block";
+        }
+
+        document.addEventListener("click", function (e) {
+            if (!e.target.closest(".search-box")) {
+                document.getElementById("searchResult").style.display = "none";
+            }
+        });
+    </script>
+
+</body>
+</html>

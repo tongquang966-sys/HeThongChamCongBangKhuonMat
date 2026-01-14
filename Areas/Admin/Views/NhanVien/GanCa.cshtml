@@ -1,0 +1,54 @@
+@model WebApp.Models.NhanVien
+
+@{
+    ViewData["Title"] = "Gán ca làm";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h4 class="fw-bold mb-3">🕒 Gán ca làm việc</h4>
+
+    <form asp-area="Admin"
+          asp-controller="NhanVien"
+          asp-action="GanCa"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" id="CaLamViecId" name="CaLamViecId" />
+
+        <div class="mb-3">
+            <label class="form-label">Nhân viên</label>
+            <input class="form-control" value="@Model.HoTen" readonly />
+        </div>
+
+        <div class="row">
+            @foreach (var ca in ViewBag.CaLamViecs)
+            {
+                <div class="col-md-4">
+                    <div class="card p-3 mb-3 shift-card"
+                         onclick="selectCa(@ca.Id)">
+                        <h6>@ca.TenCa</h6>
+                        <small>@ca.GioBatDau - @ca.GioKetThuc</small>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <button type="submit" class="btn btn-success">💾 Lưu</button>
+
+        <a asp-area="Admin"
+           asp-controller="NhanVien"
+           asp-action="Index"
+           class="btn btn-secondary ms-2">
+            ↩ Quay lại
+        </a>
+    </form>
+</div>
+
+<script>
+    function selectCa(id) {
+        document.getElementById("CaLamViecId").value = id;
+    }
+</script>

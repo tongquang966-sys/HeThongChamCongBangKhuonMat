@@ -1,0 +1,30 @@
+@model WebApp.Models.NhanVien
+
+@{
+    ViewData["Title"] = "Xoá nhân viên";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h4 class="fw-bold text-danger mb-3">🗑 Xác nhận xoá</h4>
+
+    <p>Bạn có chắc muốn xoá nhân viên <b>@Model.HoTen</b>?</p>
+
+    <form asp-area="Admin"
+          asp-controller="NhanVien"
+          asp-action="Delete"
+          method="post">
+
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+
+        <button type="submit" class="btn btn-danger">❌ Xoá</button>
+
+        <a asp-area="Admin"
+           asp-controller="NhanVien"
+           asp-action="Index"
+           class="btn btn-secondary ms-2">
+            ↩ Huỷ
+        </a>
+    </form>
+</div>

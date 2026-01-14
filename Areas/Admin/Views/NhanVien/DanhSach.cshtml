@@ -1,0 +1,35 @@
+@model IEnumerable<WebApp.Models.NhanVien>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Danh sách nhân viên</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Họ và tên</th>
+            <th>Email</th>
+            <th>SĐT</th>
+            <th>Chức vụ</th>
+            <th>Ảnh</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach(var nv in Model)
+    {
+        <tr>
+            <td>@nv.HoTen</td>
+            <td>@nv.Email</td>
+            <td>@nv.SoDienThoai</td>
+            <td>@nv.ChucVu</td>
+            <td>
+                @if (!string.IsNullOrEmpty(nv.AnhNhanVien))
+                {
+                    <img src="@nv.AnhNhanVien" width="80" />
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

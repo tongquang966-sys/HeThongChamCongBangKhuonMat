@@ -1,0 +1,119 @@
+@{
+    ViewData["Title"] = "Chấm công bằng khuôn mặt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-primary text-white fw-bold">
+            📸 Chấm công bằng khuôn mặt
+        </div>
+
+        <div class="card-body">
+            <div class="row g-4">
+                <!-- CAMERA -->
+                <div class="col-md-6 text-center">
+                    <div class="camera-box mx-auto">
+                        <video id="video" autoplay muted playsinline></video>
+                    </div>
+                    <div id="resultBox" class="mt-3"></div>
+                </div>
+
+                <!-- INFO -->
+                <div class="col-md-6">
+                    <div class="info-box p-4 rounded-4">
+                        <div class="text-center mb-3">
+                            <img id="previewImage" class="face-preview" />
+                        </div>
+
+                        <p><b>👤 Họ tên:</b> <span id="empName">---</span></p>
+                        <p><b>🆔 Mã NV:</b> <span id="empCode">---</span></p>
+
+                        <div class="alert alert-info text-center">
+                            Hệ thống tự động chấm công
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.camera-box {
+    max-width: 420px;
+    aspect-ratio: 4/3;
+    background: black;
+    border-radius: 12px;
+    overflow: hidden;
+}
+video { width: 100%; height: 100%; object-fit: cover; }
+.face-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: none;
+}
+</style>
+
+<script>
+const video = document.getElementById("video");
+const canvas = document.createElement("canvas");
+const ctx = canvas.getContext("2d");
+
+const previewImage = document.getElementById("previewImage");
+const empName = document.getElementById("empName");
+const empCode = document.getElementById("empCode");
+
+let isProcessing = false;
+
+async function startCamera() {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    video.srcObject = stream;
+    await video.play();
+}
+
+function captureBase64() {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0);
+    return canvas.toDataURL("image/jpeg");
+}
+
+async function autoScan() {
+    if (isProcessing) return;
+    isProcessing = true;
+
+    try {
+        const img = captureBase64();
+        previewImage.src = img;
+        previewImage.style.display = "block";
+
+        const res = await fetch("/User/ChamCong/QuetMatBase64", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ imageBase64: img })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            empName.innerText = data.hoTen ?? "---";
+            empCode.innerText = data.maNV ?? "---";
+            document.getElementById("resultBox").innerHTML =
+                `<div class="alert alert-success">${data.message}</div>`;
+        } else {
+            document.getElementById("resultBox").innerHTML =
+                `<div class="alert alert-danger">${data.message}</div>`;
+        }
+    } catch (e) {
+        console.error(e);
+    } finally {
+        isProcessing = false;
+    }
+}
+
+startCamera().then(() => {
+    setInterval(autoScan, 2000);
+});
+</script>

@@ -1,0 +1,54 @@
+@model WebApp.Models.NhanVien
+
+@{
+    ViewData["Title"] = "Sửa nhân viên";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h4 class="fw-bold mb-3">✏️ Sửa nhân viên</h4>
+
+    <form asp-area="Admin"
+          asp-controller="NhanVien"
+          asp-action="Edit"
+          method="post"
+          enctype="multipart/form-data">
+
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label class="form-label">Họ tên</label>
+            <input asp-for="HoTen" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">SĐT</label>
+            <input asp-for="SoDienThoai" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Chức vụ</label>
+            <input asp-for="ChucVu" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Ảnh mới (nếu có)</label>
+            <input type="file" name="anhMoi" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success">💾 Cập nhật</button>
+
+        <a asp-area="Admin"
+           asp-controller="NhanVien"
+           asp-action="Index"
+           class="btn btn-secondary ms-2">
+            ↩ Quay lại
+        </a>
+    </form>
+</div>

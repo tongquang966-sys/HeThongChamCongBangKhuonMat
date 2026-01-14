@@ -1,0 +1,81 @@
+@model WebApp.Models.CaLamViec
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Cập nhật ca làm";
+}
+
+<div class="container mt-4">
+    <h3 class="fw-bold mb-3">✏️ Cập nhật ca làm</h3>
+
+    <form asp-action="Edit" method="post" class="row g-3">
+        <input type="hidden" asp-for="Id" />
+
+        <!-- TÊN CA -->
+        <div class="col-md-6">
+            <label class="form-label fw-semibold">Tên ca</label>
+            <input asp-for="TenCa" class="form-control" required />
+            <span asp-validation-for="TenCa" class="text-danger"></span>
+        </div>
+
+        <!-- TRẠNG THÁI -->
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Trạng thái</label>
+            <select asp-for="IsActive" class="form-select">
+                <option value="true">Đang sử dụng</option>
+                <option value="false">Ngừng sử dụng</option>
+            </select>
+        </div>
+
+        <!-- GIỜ BẮT ĐẦU -->
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Giờ bắt đầu</label>
+            <input asp-for="GioBatDau" type="time" class="form-control" required />
+            <span asp-validation-for="GioBatDau" class="text-danger"></span>
+        </div>
+
+        <!-- GIỜ KẾT THÚC -->
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Giờ kết thúc</label>
+            <input asp-for="GioKetThuc" type="time" class="form-control" required />
+            <span asp-validation-for="GioKetThuc" class="text-danger"></span>
+        </div>
+
+        <!-- SỐ GIỜ CÔNG -->
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Số giờ công</label>
+            <input asp-for="SoGioCong" type="number" step="0.5" class="form-control" />
+            <span asp-validation-for="SoGioCong" class="text-danger"></span>
+        </div>
+
+        <!-- CHO PHÉP TRỄ -->
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Cho phép trễ (phút)</label>
+            <input asp-for="ChoPhepTrePhut" type="number" class="form-control" />
+            <span asp-validation-for="ChoPhepTrePhut" class="text-danger"></span>
+        </div>
+
+        <!-- CHO PHÉP VỀ SỚM -->
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Cho phép về sớm (phút)</label>
+            <input asp-for="ChoPhepSomPhut" type="number" class="form-control" />
+            <span asp-validation-for="ChoPhepSomPhut" class="text-danger"></span>
+        </div>
+
+        <!-- BUTTON -->
+        <div class="col-12 mt-3">
+            <button type="submit" class="btn btn-warning px-4">
+                💾 Cập nhật
+            </button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">
+                ⬅ Quay lại
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

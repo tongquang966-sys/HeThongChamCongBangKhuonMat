@@ -1,0 +1,49 @@
+@model WebApp.Models.CaLamViec
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Thêm ca làm";
+}
+
+<div class="container mt-4">
+    <h3 class="fw-bold mb-3">➕ Thêm ca làm</h3>
+
+    <form asp-action="Create" method="post" class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label">Tên ca</label>
+            <input asp-for="TenCa" class="form-control" required />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Giờ bắt đầu</label>
+            <input asp-for="GioBatDau" type="time" class="form-control" required />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Giờ kết thúc</label>
+            <input asp-for="GioKetThuc" type="time" class="form-control" required />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Số giờ công</label>
+            <input asp-for="SoGioCong" type="number" step="0.5" class="form-control" />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Cho phép trễ (phút)</label>
+            <input asp-for="ChoPhepTrePhut" class="form-control" />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Cho phép về sớm (phút)</label>
+            <input asp-for="ChoPhepSomPhut" class="form-control" />
+        </div>
+
+        <div class="col-12">
+            <button class="btn btn-primary">Lưu</button>
+            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </form>
+</div>
