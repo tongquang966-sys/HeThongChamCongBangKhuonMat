@@ -1,0 +1,69 @@
+@{
+    ViewData["Title"] = "Chấm công";
+    Layout = "_Layout";
+}
+
+<h3 class="mb-3">📷 Chấm công bằng khuôn mặt</h3>
+
+<div class="row">
+    <!-- CAMERA -->
+    <div class="col-md-6">
+        <video id="video" width="100%" autoplay muted class="border rounded"></video>
+        <canvas id="canvas" class="d-none"></canvas>
+
+        <button class="btn btn-primary mt-3" onclick="chamCong()">
+            📸 Chấm công
+        </button>
+    </div>
+
+    <!-- KẾT QUẢ -->
+    <div class="col-md-6">
+        <div id="result" class="alert alert-info">
+            Chưa chấm công
+        </div>
+    </div>
+</div>
+
+<script>
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const result = document.getElementById("result");
+
+    // =========================
+    // MỞ CAMERA
+    // =========================
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => video.srcObject = stream)
+        .catch(err => alert("Không mở được camera"));
+
+    // =========================
+    // CHẤM CÔNG
+    // =========================
+    async function chamCong() {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(video, 0, 0);
+
+        const base64 = canvas.toDataURL("image/jpeg").split(",")[1];
+
+        result.innerHTML = "⏳ Đang nhận diện...";
+
+        const res = await fetch("/ChamCong/ChamCong", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ imageBase64: base64 })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            result.className = "alert alert-success";
+            result.innerHTML = "✅ Chấm công thành công: <b>" + data.hoTen + "</b>";
+        } else {
+            result.className = "alert alert-danger";
+            result.innerHTML = "❌ " + data.message;
+        }
+    }
+</script>

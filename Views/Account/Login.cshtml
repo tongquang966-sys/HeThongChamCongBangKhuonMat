@@ -1,0 +1,139 @@
+@{
+    ViewData["Title"] = "Đăng nhập";
+    Layout = "_Layout";
+}
+
+<div class="login-wrapper">
+    <div class="login-card shadow-lg">
+
+        <div class="login-header">
+            <h3 class="fw-bold mb-1">FaceAttend</h3>
+            <p class="text-muted mb-0">Đăng nhập hệ thống</p>
+        </div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger mt-3 py-2 text-center">
+                @ViewBag.Error
+            </div>
+        }
+
+        <form method="post" class="mt-4">
+
+            <div class="form-group mb-3">
+                <label class="form-label">Tài khoản</label>
+                <input type="text"
+                       name="username"
+                       class="form-control"
+                       placeholder="Email hoặc admin"
+                       required />
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="form-label">Mật khẩu</label>
+                <input type="password"
+                       name="password"
+                       class="form-control"
+                       placeholder="••••••••"
+                       required />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 fw-semibold">
+                <i class="bi bi-box-arrow-in-right me-1"></i> Đăng nhập
+            </button>
+        </form>
+
+        <div class="login-footer mt-4 text-center text-muted">
+            © @DateTime.Now.Year FaceAttend System
+        </div>
+    </div>
+</div>
+
+<style>
+    /* ===================== PAGE BACKGROUND ===================== */
+    body {
+        background: linear-gradient(135deg, #2563eb, #1e40af);
+        min-height: 100vh;
+    }
+
+    /* ===================== LOGIN WRAPPER ===================== */
+    .login-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    /* ===================== LOGIN CARD ===================== */
+    .login-card {
+        background: #ffffff;
+        width: 100%;
+        max-width: 400px;
+        padding: 32px 28px;
+        border-radius: 18px;
+        animation: fadeInUp 0.6s ease;
+    }
+
+    /* ===================== HEADER ===================== */
+    .login-header {
+        text-align: center;
+    }
+
+    .login-header h3 {
+        color: #1e3a8a;
+        letter-spacing: 1px;
+    }
+
+    /* ===================== FORM ===================== */
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 4px;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        padding: 10px 12px;
+    }
+
+    .form-control:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 0.2rem rgba(37,99,235,0.2);
+    }
+
+    /* ===================== BUTTON ===================== */
+    .btn-primary {
+        border-radius: 12px;
+        padding: 10px;
+        background: linear-gradient(90deg, #2563eb, #3b82f6);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        opacity: 0.95;
+    }
+
+    /* ===================== FOOTER ===================== */
+    .login-footer {
+        font-size: 0.85rem;
+    }
+
+    /* ===================== ANIMATION ===================== */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ===================== RESPONSIVE ===================== */
+    @@media (max-width: 576px) {
+        .login-card {
+            padding: 24px 20px;
+        }
+    }
+</style>

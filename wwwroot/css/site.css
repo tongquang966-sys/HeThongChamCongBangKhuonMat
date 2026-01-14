@@ -1,0 +1,91 @@
+body {
+margin: 0;
+font-family: 'Segoe UI', sans-serif;
+background: #f5f7fb;
+}
+
+
+.sidebar {
+width: 240px;
+background: #1e293b;
+color: #fff;
+position: fixed;
+height: 100vh;
+}
+
+
+.sidebar h2 {
+text-align: center;
+padding: 20px 0;
+}
+
+
+.sidebar a {
+display: block;
+padding: 12px 20px;
+color: #cbd5e1;
+text-decoration: none;
+}
+
+
+.sidebar a:hover {
+background: #334155;
+color: #fff;
+}
+
+
+.main {
+margin-left: 240px;
+}
+
+
+.topbar {
+background: #fff;
+padding: 16px 24px;
+box-shadow: 0 2px 4px rgba(0,0,0,.05);
+}
+
+
+.content {
+padding: 24px;
+}
+
+
+.card {
+background: #fff;
+border-radius: 12px;
+padding: 20px;
+box-shadow: 0 10px 20px rgba(0,0,0,.05);
+}
+
+
+.btn-primary {
+background: #2563eb;
+color: #fff;
+border: none;
+padding: 10px 16px;
+border-radius: 8px;
+cursor: pointer;
+}
+
+
+.btn-primary:hover {
+background: #1d4ed8;
+}
+.chamcong-table td {
+    font-size: 12px;
+    vertical-align: middle;
+}
+
+.dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-bottom: 4px;
+}
+
+.dot.green { background: #22c55e; }   /* đủ công */
+.dot.yellow { background: #facc15; }  /* nửa công */
+.dot.red { background: #ef4444; }     /* nghỉ */
+.dot.gray { background: #cbd5e1; }    /* chưa chấm */
